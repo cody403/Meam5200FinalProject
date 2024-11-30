@@ -1,14 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-### Dont need for VM ##############
-import sys
-import os
 
-# Add the parent directory to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-########################
+
 import numpy as np
-from lib.calculateFK import FK
+
 
 def detectCollision (linePt1, linePt2, box):
     """
@@ -110,50 +105,17 @@ def plotBox(axis, box):
     prism = Poly3DCollection([box],edgecolor='g',facecolor='g',alpha=0.5)
     axis.add_collection3d(prism)
 
-def isRobotCollided(q, map, safety_margin=0.0):
-    """
-    Detects if the robot is collided with any obstacles in a map.
-
-    :param q: the current joint confuguration
-    :param map: the map we are using that contains obstacles
-    :param safety_margin: the safety margin we want around our obstacles
-
-    :return: boolean True if collided, False if no collisions
-    """
-    # Get the joint positions
-    fk = FK()
-    jointPositions, __ = fk.forward(q)
-    
-    # Check if there are obstacles in the maap
-    if map.obstacles is not None:
-
-        # Iterate over each obstacle
-        for o in range(len(map.obstacles)):
-            box = map.obstacles[o, :].copy()
-            
-            # Apply safety margin to the obstacle
-            box[0] -= safety_margin
-            box[1] -= safety_margin
-            box[2] -= safety_margin
-            box[3] += safety_margin
-            box[4] += safety_margin
-            box[5] += safety_margin
-
-            # Iterate over each link
-            for i in range(len(jointPositions) - 1):
-                # Extract the starting and ending points of the link
-                link_start = jointPositions[i]
-                link_end = jointPositions[i + 1]
-                
-                # Check for collision between the link and the obstacle including safety margin
-                if True in detectCollision(link_start.reshape(1,3), link_end.reshape(1,3), box):
-                    return True  
-    return False # No collsions detected for any of the links with any of the obstacles
 
 if __name__=='__main__':
     """
     Visual unit tests for collision check. Generates random lines and check if collide with box. Output is plot of lines
     and box, color coded by collision.
+    """
+    box = np.array([-10, -10, 0, 10, 10, 10])
+    start = np.array([[1, 1, 1]])
+    end = np.array([[2, 2, 2]])
+    print(detectCollision(start, end, box))
+
     """
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
@@ -203,5 +165,6 @@ if __name__=='__main__':
     plotBox(ax, box5)
     plotBox(ax, box6)
     plt.show()
+    """
 
 
