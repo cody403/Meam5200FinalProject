@@ -48,6 +48,10 @@ class Tree:
             return None
         
 
+    def rewire(self, new = 'Node') -> None:
+        pass
+        
+
     def limits_exceeded(self, q) -> bool:
         if any((LOWER-q) > 0) or any((q-UPPER) > 0):
             return True
@@ -147,7 +151,7 @@ def rrt(map, start, goal):
         #
         #
         #rewire for rrt*
-        #tree.rewire(q_new)
+        tree.rewire(q_new)
         
         #if there is a collision skip to the next
         if q_new is None:
