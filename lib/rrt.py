@@ -115,7 +115,6 @@ def buffered_obstacles(map):
     return obstacles
 
 
-
 def rrt(map, start, goal):
     """
     Implement RRT algorithm in this file.

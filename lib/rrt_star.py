@@ -29,6 +29,7 @@ class Tree:
     def __init__(self, obstacles, start):
         self.nodes = [start]
         self.obstacles = obstacles
+        self.neighbor_radius = 0.1
 
     def extend(self, new_node):
         min_dist = np.inf
@@ -49,7 +50,12 @@ class Tree:
         
 
     def rewire(self, new = 'Node') -> None:
-        pass
+        for neighbor in self.nodes:
+            distance = neighbor.distance(new)
+            if distance < self.neighbor_radius:
+                pass
+                #something
+                #
         
 
     def limits_exceeded(self, q) -> bool:
