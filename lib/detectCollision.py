@@ -3,6 +3,39 @@
 
 
 import numpy as np
+from lib.calculateFKJac import FK_Jac
+
+fk = FK_Jac()
+
+
+LOWER = np.array([-2.8973,-1.7628,-2.8973,-3.0718,-2.8973,-0.0175,-2.8973])
+UPPER = np.array([2.8973,1.7628,2.8973,-0.0698,2.8973,3.7525,2.8973])
+
+def limits_exceeded(q) -> bool:
+    if any((LOWER-q) > 0) or any((q-UPPER) > 0):
+        return True
+    return False
+
+
+def is_configuration_valid(q, obstacles, height_limit, joint_positions = None) -> bool:
+    #checks joint limits
+    if limits_exceeded(q):
+        return False
+    
+    #saves time not computing joint locations if they've been computed
+    if joint_positions is None:
+        joint_positions, _ = fk.forward_expanded(q)
+
+    #goes under the table
+    if any(joint_positions[:, 2] <= height_limit):
+        return False
+    
+    #hits a box
+    for box in obstacles:
+        if any(detectCollision(joint_positions[:-1, :], joint_positions[1:,:], box)):
+            return False
+    return True
+
 
 
 def detectCollision (linePt1, linePt2, box):
