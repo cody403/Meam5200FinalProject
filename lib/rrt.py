@@ -49,7 +49,7 @@ class Tree:
     
 
     def is_path_valid(self, start, end):
-        num_steps = 20
+        num_steps = 100
 
         if not is_configuration_valid(end, self.obstacles, HEIGHT_LIMIT):
             return False
